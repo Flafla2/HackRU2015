@@ -1,0 +1,3 @@
+[submodule "Assets/Wiimote"]
+	path = Assets/Wiimote
+	url = https://github.com/Flafla2/Unity-Wiimote.git

@@ -4,31 +4,45 @@ using WiimoteApi;
 
 public class PerspectiveShifter : MonoBehaviour {
 
-    public float screenHeightinMM = 20 * 25.4f;
-
     private Vector2 offset = new Vector2(0, 0);
     public float sensitivity = 3;
     public Camera camera;
+    public bool cameraAboveScreen = false;
     private float headDist = 1;
+    private float defaultHeadDist = 0;
 
-    public const float dotDistanceInMM = 8.5f * 25.45f;
-    public const float screenHeightInMM = 20 * 25.4f;
-    public const float radiansPerPixel = (float)(Mathf.PI / 4) / 1024.0f; //45 degree field of view with a 1024x768 camera
-    public const float movementScaling = 1.0f;
+    public float dotDistanceInM = 0.155575f;
+    public float screenHeightInM = 0.2667f;
+    public const float radiansPerPixel = (float)(Mathf.PI / 6) / 1024.0f; //30 degree field of view with a 1024x768 camera
+    public float movementScaling = 1.0f;
 
     private float relativeVerticalAngle = 0;
     private float cameraVerticalAngle = 0;
 
+    private Wiimote wiimote;
+
     void Update()
     {
-        offset += new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * sensitivity * Time.deltaTime;
+        if (!WiimoteManager.HasWiimote()) { return; }
+
+        wiimote = WiimoteManager.Wiimotes[0];
+        int ret;
+        do
+        {
+            ret = WiimoteManager.ReadWiimoteData(wiimote);
+        } while (ret > 0);
+
+        /*offset += new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * sensitivity * Time.deltaTime;
 
         camera.transform.localPosition = -offset;
 
         if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
             headDist += 0.1f;
         else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
-            headDist -= 0.1f;
+            headDist -= 0.1f;*/
+        InterperetWiimoteData(wiimote);
+
+        camera.transform.localPosition += ((new Vector3(offset.x, -offset.y, movementScaling*(headDist - defaultHeadDist)) * -1) - camera.transform.localPosition) * 0.4f;
 
         float nearPlane = camera.nearClipPlane;
         float screenAspect = camera.aspect;
@@ -43,17 +57,27 @@ public class PerspectiveShifter : MonoBehaviour {
     public void InterperetWiimoteData(Wiimote remote)
     {
         float[,] ir = remote.GetProbableSensorBarIR();
+
+        if (ir[0, 0] == -1)
+            return;
+       
         float dx = ir[0, 0] - ir[1, 0];
         float dy = ir[0, 1] - ir[1, 1];
         float pointDist = (float)Mathf.Sqrt(dx * dx + dy * dy);
 
         float angle = radiansPerPixel * pointDist / 2;
         //in units of screen hieght since the box is a unit cube and box hieght is 1
-        headDist = movementScaling * (float)((dotDistanceInMM / 2) / Mathf.Tan(angle)) / screenHeightinMM;
+        headDist = movementScaling * (float)((dotDistanceInM / 2) / Mathf.Tan(angle)) / screenHeightInM;
+        //Debug.Log(headDist + "");
 
+        float avgX = (ir[0,0] + ir[1,0]) / 2.0f - 512;
+        float avgY = (ir[0,1] + ir[1,1]) / 2.0f - 384;
 
-        float avgX = (ir[0,0] + ir[1,0]) / 2.0f;
-        float avgY = (ir[0,1] + ir[1,1]) / 2.0f;
+        float rotation = Mathf.Atan2(wiimote.accel[2], wiimote.accel[0]) - (float)(Mathf.PI / 2.0f);
+        float cos = Mathf.Cos(rotation);
+        float sin = Mathf.Sin(rotation);
+        avgX = avgX * cos - avgY * sin + 512;
+        avgY = avgX * sin - avgY * cos + 384;
 
 
         //should  calaculate based on distance
@@ -62,7 +86,7 @@ public class PerspectiveShifter : MonoBehaviour {
 
         relativeVerticalAngle = (avgY - 384) * radiansPerPixel;//relative angle to camera axis
 
-        offset.y = -.5f + (float)(movementScaling * Mathf.Sin(relativeVerticalAngle + cameraVerticalAngle) * headDist);
+        offset.y = (cameraAboveScreen ? -.5f : .5f) + (float)(movementScaling * Mathf.Sin(relativeVerticalAngle + cameraVerticalAngle) * headDist);
     }
 
     public void SetVanishingPoint (Camera cam, Vector2 perspectiveOffset) {
@@ -96,5 +120,13 @@ public class PerspectiveShifter : MonoBehaviour {
 	    m[2,0] =   0;  m[2,1] =   0;  m[2,2] = c;   m[2,3] =   d;
 	    m[3,0] =   0;  m[3,1] =   0;  m[3,2] = e;   m[3,3] =   0;
 	    return m;
+    }
+
+    public void Calibrate()
+    {
+        double angle = Mathf.Acos(.5f / headDist) - Mathf.PI / 2;
+        cameraVerticalAngle = (float)((angle - relativeVerticalAngle));
+
+        defaultHeadDist = headDist;
     }
 }

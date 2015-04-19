@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Threading;
 using System.Runtime.InteropServices;
 
 namespace WiimoteApi { 
@@ -18,6 +19,12 @@ public class WiimoteManager
     private static InputDataType last_report_type = InputDataType.REPORT_BUTTONS;
     private static bool expecting_status_report = false;
 
+    public static bool Debug_Messages = false;
+
+    public static int MaxWriteFrequency = 20; // In ms
+    private static float LastWriteTime = 0;
+    private static Queue<WriteQueueData> WriteQueue;
+
     // ------------- RAW HIDAPI INTERFACE ------------- //
 
     public static bool FindWiimote(bool wiimoteplus)
@@ -27,6 +34,9 @@ public class WiimoteManager
 
         IntPtr ptr = HIDapi.hid_enumerate(vendor_id, wiimoteplus ? product_id_wiimoteplus : product_id_wiimote);
         IntPtr cur_ptr = ptr;
+        if (ptr == IntPtr.Zero)
+            return false;
+
         hid_device_info enumerate = (hid_device_info)Marshal.PtrToStructure(ptr, typeof(hid_device_info));
 
         bool found = false;
@@ -50,11 +60,15 @@ public class WiimoteManager
             {
                 remote = new Wiimote();
                 remote.hidapi_path = enumerate.path;
-                Debug.Log(remote.hidapi_path);
+                
+                if(Debug_Messages)
+                    Debug.Log("Found New Remote: "+remote.hidapi_path);
+
                 remote.hidapi_handle = HIDapi.hid_open_path(remote.hidapi_path);
                 remote.wiimoteplus = wiimoteplus;
                 Wiimotes.Add(remote);
 
+                SendDataReportMode(remote, InputDataType.REPORT_BUTTONS);
                 SendStatusInfoRequest(remote);
             }
 
@@ -72,6 +86,7 @@ public class WiimoteManager
     {
         if (remote.hidapi_handle != IntPtr.Zero)
             HIDapi.hid_close(remote.hidapi_handle);
+
         Wiimotes.Remove(remote);
     }
 
@@ -84,7 +99,39 @@ public class WiimoteManager
     {
         if (hidapi_wiimote == IntPtr.Zero) return -2;
 
-        return HIDapi.hid_write(hidapi_wiimote, data, new UIntPtr(Convert.ToUInt32(data.Length)));
+        if (WriteQueue == null)
+        {
+            WriteQueue = new Queue<WriteQueueData>();
+            SendThreadObj = new Thread(new ThreadStart(SendThread));
+            SendThreadObj.Start();
+        }
+
+        WriteQueueData wqd = new WriteQueueData();
+        wqd.pointer = hidapi_wiimote;
+        wqd.data = data;
+        lock(WriteQueue)
+            WriteQueue.Enqueue(wqd);
+
+        return 0; // TODO: Better error handling
+    }
+
+    private static Thread SendThreadObj;
+    private static void SendThread()
+    {
+        while (true)
+        {
+            lock (WriteQueue)
+            {
+                if (WriteQueue.Count != 0)
+                {
+                    WriteQueueData wqd = WriteQueue.Dequeue();
+                    int res = HIDapi.hid_write(wqd.pointer, wqd.data, new UIntPtr(Convert.ToUInt32(wqd.data.Length)));
+                    if (res == -1) Debug.LogError("HidAPI reports error " + res + " on write: " + Marshal.PtrToStringUni(HIDapi.hid_error(wqd.pointer)));
+                    else if (Debug_Messages) Debug.Log("Sent " + res + "b: [" + wqd.data[0].ToString("X").PadLeft(2, '0') + "] " + BitConverter.ToString(wqd.data, 1));
+                }
+            }
+            Thread.Sleep(MaxWriteFrequency);
+        }
     }
 
     public static int RecieveRaw(IntPtr hidapi_wiimote, byte[] buf)
@@ -217,9 +264,8 @@ public class WiimoteManager
 
         int res = SendRaw(remote.hidapi_handle, final);
 
-        if (res == -1) Debug.LogError("HidAPI reports error " + res + " on write: " + Marshal.PtrToStringUni(HIDapi.hid_error(remote.hidapi_handle)));
-        else if (res < -1) Debug.LogError("Incorrect Input to HIDAPI.  No data has been sent.");
-        else Debug.Log("Sent " + res + "b: [" + final[0].ToString("X").PadLeft(2, '0') + "] " + BitConverter.ToString(data));
+        if (res < -1) Debug.LogError("Incorrect Input to HIDAPI.  No data has been sent.");
+        
 
         return res;
     }
@@ -332,7 +378,8 @@ public class WiimoteManager
         for (int x = 0; x < data.Length; x++)
             data[x] = buf[x + 1];
 
-        Debug.Log("Recieved: [" + buf[0].ToString("X").PadLeft(2, '0') + "] " + BitConverter.ToString(data));
+        if (Debug_Messages)
+            Debug.Log("Recieved: [" + buf[0].ToString("X").PadLeft(2, '0') + "] " + BitConverter.ToString(data));
 
         // Variable names used throughout the switch/case block
         byte[] buttons;
@@ -742,6 +789,11 @@ public class WiimoteManager
         FULL = 5
     }
 
+    private class WriteQueueData {
+        public IntPtr pointer;
+        public byte[] data;
+    }
+
 }
 
 [System.Serializable]
@@ -1059,7 +1111,7 @@ public class NunchuckData
     }
 
     public void InterpretExtensionData(byte[] data) {
-        if(data.Length < 6) {
+        if(data == null || data.Length < 6) {
             accel[0] = 0; accel[1] = 0; accel[2] = 0;
             stick[0] = 128; stick[1] = 128;
             c = false;

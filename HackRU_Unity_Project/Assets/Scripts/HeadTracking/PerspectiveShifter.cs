@@ -15,6 +15,7 @@ public class PerspectiveShifter : MonoBehaviour {
     public float screenHeightInM = 0.2667f;
     public const float radiansPerPixel = (float)(Mathf.PI / 6) / 1024.0f; //30 degree field of view with a 1024x768 camera
     public float movementScaling = 1f;
+    public float yOffset = -0.6f;
     //public float zScaling = 0.5f;
     public bool disableZCalib = true;
 
@@ -31,7 +32,7 @@ public class PerspectiveShifter : MonoBehaviour {
 
         InterperetWiimoteData(wiimote);
 
-        camera.transform.localPosition += ((new Vector3(offset.x, -offset.y, (headDist - defaultHeadDist)) * -1) - camera.transform.localPosition) * 0.4f;
+        camera.transform.localPosition = Vector3.Lerp(new Vector3(offset.x, -offset.y+yOffset, (headDist - defaultHeadDist)) * -1, camera.transform.localPosition, 10 * Time.deltaTime);
 
         float nearPlane = camera.nearClipPlane;
         float screenAspect = camera.aspect;

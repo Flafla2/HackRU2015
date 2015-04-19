@@ -74,6 +74,11 @@ public class WiimoteOptions : MonoBehaviour {
         {
             if (GunRemote.a && perspective != null)
                 perspective.Calibrate();
+
+            if (GunRemote.one && GunRemote.two && GunRemote.home)
+            {
+                Application.LoadLevel("MainMenu");
+            }
         }
     }
 

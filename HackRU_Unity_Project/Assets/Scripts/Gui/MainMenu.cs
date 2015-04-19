@@ -24,14 +24,16 @@ public class MainMenu : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        if (Time.time - LastWiimoteUpdate > m_UpdateRate)
+        
+
+        HasWiimotes = WiimoteManager.Wiimotes.Count >= 2;
+        HasSetupGun = HasWiimotes && !WiimoteOptions.WaitingForGunUpdate;
+
+        if (!HasWiimotes && Time.time - LastWiimoteUpdate > m_UpdateRate)
         {
             WiimoteManager.FindWiimote(false);
             LastWiimoteUpdate = Time.time;
         }
-
-        HasWiimotes = WiimoteManager.Wiimotes.Count >= 2;
-        HasSetupGun = HasWiimotes && !WiimoteOptions.WaitingForGunUpdate;
 
         if (!HasWiimotes)
             WiimoteOptions.RedefineRemoteIDs();

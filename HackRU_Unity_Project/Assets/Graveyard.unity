@@ -864,57 +864,50 @@ Prefab:
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
-    - target: {fileID: 418100, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 418100, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -.600000024
-      objectReference: {fileID: 0}
-    - target: {fileID: 11440598, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
-      propertyPath: disableZCalib
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[0]
+      value: 
+      objectReference: {fileID: 1890368405}
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[1]
+      value: 
+      objectReference: {fileID: 895608996}
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[2]
+      value: 
+      objectReference: {fileID: 2095447311}
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[3]
+      value: 
+      objectReference: {fileID: 1666949447}
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[4]
+      value: 
+      objectReference: {fileID: 1147401930}
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[5]
+      value: 
+      objectReference: {fileID: 644666900}
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[6]
+      value: 
+      objectReference: {fileID: 395470714}
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[7]
+      value: 
+      objectReference: {fileID: 16715515}
+    - target: {fileID: 11407838, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+      propertyPath: Trail.Array.data[8]
+      value: 
+      objectReference: {fileID: 1029784153}
+    m_RemovedComponents:
+    - {fileID: 11406966, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &23349481
 Transform:
   m_PrefabParentObject: {fileID: 489236, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
   m_PrefabInternal: {fileID: 23349480}
---- !u!1 &23349482
-GameObject:
-  m_PrefabParentObject: {fileID: 154158, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
-  m_PrefabInternal: {fileID: 23349480}
---- !u!114 &23349483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 23349482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf099478c4bd47149a42f38f5833a843, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Trail:
-  - {fileID: 1890368405}
-  - {fileID: 895608996}
-  - {fileID: 2095447311}
-  - {fileID: 1666949447}
-  - {fileID: 1147401930}
-  - {fileID: 644666900}
-  - {fileID: 395470714}
-  - {fileID: 16715515}
-  - {fileID: 1029784153}
-  Skeletons: 00000000000000000200000003000000050000000000000002000000000000000000000000000000
-  kills: 0
-  isDead: 0
-  PlayerIndex: 1
-  ArrivedIndex: 0
-  moving: 0
-  Speed: 7
 --- !u!4 &23961132
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 6bb87a11c15512945baf00bb0e26e4bd, type: 2}
@@ -5837,7 +5830,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -15180,6 +15173,10 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 869032ec2af3de44ea014b6403f49d9b, type: 2}
   m_IsPrefabParent: 0
+--- !u!4 &725263443
+Transform:
+  m_PrefabParentObject: {fileID: 429864, guid: 88303f9962250c64aba040ecc0e8b775, type: 2}
+  m_PrefabInternal: {fileID: 23349480}
 --- !u!1001 &725689586
 Prefab:
   m_ObjectHideFlags: 0
@@ -16760,7 +16757,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -18691,33 +18688,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7814f70856378f14d83c6996b369cee7, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &842701359
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 842701360}
-  m_Layer: 0
-  m_Name: BelowCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &842701360
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 842701359}
-  m_LocalRotation: {x: 0, y: -1, z: 0, w: -1.62920685e-07}
-  m_LocalPosition: {x: 0, y: -2, z: 2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 23349481}
-  m_RootOrder: 0
 --- !u!4 &844034012
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 7814f70856378f14d83c6996b369cee7, type: 2}
@@ -19965,7 +19935,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -24757,7 +24727,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -36704,7 +36674,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -38042,7 +38012,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -38592,7 +38562,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -42787,7 +42757,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -48065,7 +48035,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 
@@ -49303,7 +49273,7 @@ Prefab:
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: Trail.Array.data[1]
       value: 
-      objectReference: {fileID: 842701360}
+      objectReference: {fileID: 725263443}
     - target: {fileID: 11428858, guid: b1922cd7161769c47b893097ccfdf475, type: 2}
       propertyPath: FollowTrail
       value: 

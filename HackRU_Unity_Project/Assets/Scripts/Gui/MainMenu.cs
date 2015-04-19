@@ -42,4 +42,9 @@ public class MainMenu : MonoBehaviour {
         if (HasSetupGun)
             m_InputModule.wiimote = WiimoteOptions.GunRemote;
 	}
+
+    public void Play()
+    {
+        Application.LoadLevel("Graveyard");
+    }
 }

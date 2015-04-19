@@ -8,6 +8,7 @@ namespace UnityEngine.EventSystems
     {
         private float m_NextAction;
         private bool hitStickDirection = false;
+        private bool hitSubmit = false;
 
         protected NunchuckInputModule()
         { }
@@ -48,7 +49,7 @@ namespace UnityEngine.EventSystems
             if (!base.ShouldActivateModule() || wiimote == null)
                 return false;
 
-            var shouldActivate = wiimote.b;
+            var shouldActivate = wiimote.b && !hitSubmit;
             if (wiimote.current_ext != ExtensionController.NUNCHUCK)
                 return shouldActivate;
             NunchuckData data = new NunchuckData();
@@ -103,8 +104,13 @@ namespace UnityEngine.EventSystems
                 return false;
 
             var data = GetBaseEventData();
-            if (wiimote.b)
+            if (wiimote.b && !hitSubmit)
+            {
+                hitSubmit = true;
                 ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, ExecuteEvents.submitHandler);
+            }
+            else if (!wiimote.b)
+                hitSubmit = false;
 
             if (wiimote.current_ext != ExtensionController.NUNCHUCK)
                 return data.used;

@@ -21,6 +21,8 @@ public class WiimoteOptions : MonoBehaviour {
     }
     public static bool _WaitingForGunUpdate = true;
 
+    public PerspectiveShifter perspective;
+
     public static float WiimoteReadInterval = 1f / 30f;
     private static float LastWiimoteReadTime = 0;
 
@@ -66,6 +68,12 @@ public class WiimoteOptions : MonoBehaviour {
                     WiimoteManager.SetupIRCamera(_HeadTrackingRemote, WiimoteManager.IRDataType.EXTENDED);
                 }
             }
+        }
+
+        if (!WaitingForGunUpdate)
+        {
+            if (GunRemote.a && perspective != null)
+                perspective.Calibrate();
         }
     }
 

@@ -17,7 +17,7 @@ public class ReticleMovement : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Mouse0) ){
 			RaycastHit hit;
 			if(Physics.Raycast(Cam.ScreenPointToRay(Input.mousePosition), out hit,8)){
-				hit.collider.gameObject.GetComponent<Enemy>().Health--;
+				hit.collider.GetComponentInParent<Enemy>().Health--;
 			}
 		}
 	}

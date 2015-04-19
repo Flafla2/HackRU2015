@@ -3,14 +3,17 @@ using System.Collections;
 
 public class FollowTrail : MonoBehaviour {
 	public Transform[] Trail;
-
+	public int[] Skeletons;
+	public int kills = 0;
+	public bool isDead = false;
 	private int last = 0;
 	private int next = 1;
 	private float lastTime = 0;
 	private float nextTime = 0;
-
-	public bool CanMoveToNextPoint = false;
+	public int PlayerIndex = 0;
+	public bool CanMoveToNextPoint = false,moving=false;
 	public float Speed;
+
 
 	// Use this for initialization
 	void Start () {
@@ -25,29 +28,40 @@ public class FollowTrail : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		float alpha = Mathf.Clamp01 ((Time.time - lastTime) / (nextTime - lastTime));
-		transform.position = Vector3.Lerp (Trail [last].position, Trail [next].position, alpha);
-		transform.rotation = Quaternion.Slerp (Trail [last].rotation, Trail [next].rotation, alpha);
-		if (CanMoveToNextPoint) {
+		if (!isDead) {
+			Vector3 lastPos = this.transform.position;
+			float alpha = Mathf.Clamp01 ((Time.time - lastTime) / (nextTime - lastTime));
+			transform.position = Vector3.Lerp (Trail [last].position, Trail [next].position, alpha);
+			transform.rotation = Quaternion.Slerp (Trail [last].rotation, Trail [next].rotation, alpha);
+			if (CanMoveToNextPoint) {
 
 
 
-			if (alpha >= 1&&CanMoveToNextPoint) {
-				if(!Trail[(next+1)%Trail.Length].tag.Contains("Intermediary")){
-					CanMoveToNextPoint = false;
+				if (alpha >= 1 && CanMoveToNextPoint) {
+					if (!Trail [(next + 1) % Trail.Length].tag.Contains ("Intermediary")) {
+						CanMoveToNextPoint = false;
+					}
+
+
+					last = next;
+					next = (next + 1) % Trail.Length;
+
+					lastTime = Time.time;
+					nextTime = Time.time + Vector3.Distance (Trail [last].position, Trail [next].position) / Speed;
+
+
 				}
-
-
-				last = next;
-				next = (next + 1) % Trail.Length;
-
-				lastTime = Time.time;
-				nextTime = Time.time + Vector3.Distance (Trail [last].position, Trail [next].position) / Speed;
-
 			}
-		}
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			CanMoveToNextPoint = true;
+			if (this.transform.position == lastPos) {
+				moving = false;
+			} else {
+				moving = true;
+			}
+			if (Input.GetKeyDown (KeyCode.Space) || kills >= Skeletons[PlayerIndex]) {
+				PlayerIndex ++;
+				kills = 0;
+				CanMoveToNextPoint = true;
+			}
 		}
 	}
 }

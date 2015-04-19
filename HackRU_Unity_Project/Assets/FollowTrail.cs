@@ -15,10 +15,14 @@ public class FollowTrail : MonoBehaviour {
 	public bool moving=false;
 	public float Speed;
 
+	public GameObject WinText;
+
     public static FollowTrail Singleton;
 
 	// Use this for initialization
 	void Start () {
+		WinText.SetActive(false);
+
         if (Singleton == null)
             Singleton = this;
         else
@@ -34,6 +38,9 @@ public class FollowTrail : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!isDead) {
+			if(ArrivedIndex == Trail.Length-1) {
+				WinText.SetActive(true);
+			}
 			Vector3 lastPos = this.transform.position;
 			float alpha = Mathf.Clamp01 ((Time.time - lastTime) / (nextTime - lastTime));
 			transform.position = Vector3.Lerp (Trail [last].position, Trail [next].position, alpha);

@@ -122,27 +122,11 @@ public class PerspectiveShifter : MonoBehaviour {
 	    return m;
     }
 
-    void OnGUI()
+    public void Calibrate()
     {
-        GUILayout.Label("Wiimote Found: " + WiimoteManager.HasWiimote());
-        if (GUILayout.Button("Find Wiimote"))
-        {
-            bool found = WiimoteManager.FindWiimote(false);
+        double angle = Mathf.Acos(.5f / headDist) - Mathf.PI / 2;
+        cameraVerticalAngle = (float)((angle - relativeVerticalAngle));
 
-            if (found)
-            {
-                wiimote = WiimoteManager.Wiimotes[0];
-                WiimoteManager.SendPlayerLED(wiimote, true, false, false, true);
-                WiimoteManager.SetupIRCamera(wiimote, WiimoteManager.IRDataType.BASIC);
-            }
-        }
-
-        if (GUILayout.Button("Calibrate"))
-        {
-            double angle = Mathf.Acos(.5f / headDist) - Mathf.PI / 2;
-            cameraVerticalAngle = (float)((angle - relativeVerticalAngle));
-
-            defaultHeadDist = headDist;
-        }
+        defaultHeadDist = headDist;
     }
 }

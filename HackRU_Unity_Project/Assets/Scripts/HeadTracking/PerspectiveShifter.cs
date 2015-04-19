@@ -23,23 +23,10 @@ public class PerspectiveShifter : MonoBehaviour {
 
     void Update()
     {
-        if (!WiimoteManager.HasWiimote()) { return; }
+        if (WiimoteOptions.WaitingForGunUpdate) return;
 
-        wiimote = WiimoteManager.Wiimotes[0];
-        int ret;
-        do
-        {
-            ret = WiimoteManager.ReadWiimoteData(wiimote);
-        } while (ret > 0);
+        wiimote = WiimoteOptions.HeadTrackingRemote;
 
-        /*offset += new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * sensitivity * Time.deltaTime;
-
-        camera.transform.localPosition = -offset;
-
-        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
-            headDist += 0.1f;
-        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
-            headDist -= 0.1f;*/
         InterperetWiimoteData(wiimote);
 
         camera.transform.localPosition += ((new Vector3(offset.x, -offset.y, movementScaling*(headDist - defaultHeadDist)) * -1) - camera.transform.localPosition) * 0.4f;
